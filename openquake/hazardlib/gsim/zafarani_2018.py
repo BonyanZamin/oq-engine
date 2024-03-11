@@ -30,7 +30,7 @@ from openquake.hazardlib import const
 from openquake.hazardlib.imt import PGA, SA
 
 
-def _compute_distance(ctx, C):
+def _compute_distance(C, ctx):
     """
     Compute the second term of the equation 1 which is presented in eq.3 and c2 is zero:
 
@@ -41,7 +41,7 @@ def _compute_distance(ctx, C):
     return C['c1'] * np.log10(rval / rref)
 
 
-def _compute_magnitude(ctx, C):
+def _compute_magnitude(C, ctx):
     """
     Compute the third term of the equation 1:
 
@@ -55,7 +55,7 @@ def _compute_magnitude(ctx, C):
         C["e1"] + C['b3'] * (ctx.mag - C['mh']))
 
 
-def _get_mechanism(ctx, C):
+def _get_mechanism(C, ctx):
     """
     Compute the fifth term of the equation 1 described on paragraph :
     Get fault type dummy variables, see Table 1
@@ -64,7 +64,7 @@ def _get_mechanism(ctx, C):
     fU = 0
     return C['fTF'] * TF + C['fSS'] * SS + fU * U
 
-def _get_site_amplification(ctx, C):
+def _get_site_amplification(C, ctx):
     """
     Compute the fourth term of the equation 1 described on paragraph :
     The functional form Fs in Eq. (1) represents the site amplification and
@@ -127,9 +127,7 @@ class ZafaraniEtAl2018(GMPE):
     #: explained in the 'Introduction'.
     DEFINED_FOR_TECTONIC_REGION_TYPE = const.TRT.ACTIVE_SHALLOW_CRUST
 
-    #: Set of :mod:`intensity measure types <openquake.hazardlib.imt>`
-    #: this GSIM can calculate. A set should contain classes from module
-    #: :mod:`openquake.hazardlib.imt`.
+    #: Supported intensity measure types are PGA and SA
     DEFINED_FOR_INTENSITY_MEASURE_TYPES = {PGA, SA}
 
     #: Supported intensity measure component is the geometric mean of two
@@ -147,7 +145,7 @@ class ZafaraniEtAl2018(GMPE):
     #: Required rupture parameters are magnitude and rake (eq. 1).
     REQUIRES_RUPTURE_PARAMETERS = {'rake', 'mag'}
 
-    #: Required distance measure is RRup (eq. 1).
+    #: Required distance measure is Rjb (eq. 1).
     REQUIRES_DISTANCES = {'rjb'}
 
     sgn = 0
@@ -160,23 +158,20 @@ class ZafaraniEtAl2018(GMPE):
         """
         for m, imt in enumerate(imts):
             C = self.COEFFS[imt]
-            imean = (_compute_magnitude(ctx, C) +
-                     _compute_distance(ctx, C) +
-                     _get_site_amplification(ctx, C) +
-                     _get_mechanism(ctx, C))
+            imean = (_compute_magnitude(C, ctx) +
+                     _compute_distance(C, ctx) +
+                     _get_site_amplification(C, ctx) +
+                     _get_mechanism(C, ctx))
 
-            # Convert units to g,
-            # for PGA and SA:
-            if imt.string.startswith(('PGA', 'SA')):
-                mean[m] = np.log((10.0 ** (imean - 2.0)) / g)
+
+            mean[m] = np.log((10.0 ** (imean - 2.0)) / g)
 
             # Return stddevs in terms of natural log scaling
             sig[m] = np.log(10.0 ** C['SigmaTot'])
             tau[m] = np.log(10.0 ** C['SigmaB'])
             phi[m] = np.log(10.0 ** C['SigmaW'])
 
-    #: Coefficients from SA from Table 1
-    #: Coefficients from PGA e PGV from Table 5
+    #: Coefficients for PGA and SA from Table 1
 
     COEFFS = CoeffsTable(sa_damping=5, table="""
     IMT      mh       e1       b1       b2         b3        c1        h       fSS        fTF       sB       sC         sD    SigmaB   SigmaW  SigmaTot
