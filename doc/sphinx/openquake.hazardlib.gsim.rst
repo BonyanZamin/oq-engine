@@ -124,6 +124,14 @@ allen_2022
     :undoc-members:
     :show-inheritance:
 
+ambraseys_2005
+------------------------------------------
+
+.. automodule:: openquake.hazardlib.gsim.ambraseys_2005
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 ameri_2017
 ---------------------------------------------------
 
@@ -662,6 +670,14 @@ geomatrix_1993
     :undoc-members:
     :show-inheritance:
 
+ghasemi_2009
+----------------------------------------------
+
+.. automodule:: openquake.hazardlib.gsim.ghasemi_2009
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 ghofrani_atkinson_2014
 ------------------------------------------------------
 
@@ -1016,6 +1032,14 @@ sadigh_1997
     :undoc-members:
     :show-inheritance:
 
+saffari_2012
+-------------------------------------------
+
+.. automodule:: openquake.hazardlib.gsim.saffari_2012
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 sera_amplification_models
 -------------------------------------------
 
@@ -1247,6 +1271,15 @@ yu_2013
     :members:
     :undoc-members:
     :show-inheritance:
+
+zafarani_2018
+-------------------------------------------
+
+.. automodule:: openquake.hazardlib.gsim.zafarani_2018
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 zalachoris_rathje_2019
 -----------------------------------------

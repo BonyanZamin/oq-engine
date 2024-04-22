@@ -89,15 +89,10 @@ class Ghasemi2009(GMPE):
     #: Supported standard deviation types is total.
     DEFINED_FOR_STANDARD_DEVIATION_TYPES = {const.StdDev.TOTAL}
 
-    #: Required site parameters. The GMPE was developed for an ''average''
-    #: site conditions. The authors specify that for rock sites the
-    #: values should be lowered by 40 % and for soil site they should be
-    #: raised by 40 %. For greatest consistencty the site condition is
-    #: neglected currently but a site-dependent GMPE may be implemented
-    #: inside a subclass.
+    #: Required site parameters is Vs30
     REQUIRES_SITES_PARAMETERS = {'vs30'}
 
-    #: Required rupture parameters are magnitude
+    #: Required rupture parameters are magnitude and rake
     REQUIRES_RUPTURE_PARAMETERS = {'mag', 'rake'}
 
     #: Required distance measure is rupture distance
