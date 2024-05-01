@@ -83,7 +83,7 @@ def _get_site_amplification(C, ctx):
 def _get_site_type_dummy_variables(ctx):
     """
     Get site type dummy variables, five different EC8 site classes
-    he recording ctx are classified into 5 classes,
+    The recording ctx are classified into 5 classes,
     based on the shear wave velocity intervals in the uppermost 30 m, Vs30,
     according to the EC8 (CEN 2003):
     class A: Vs30 > 800 m/s
