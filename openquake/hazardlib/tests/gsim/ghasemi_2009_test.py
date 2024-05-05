@@ -53,7 +53,7 @@ def _compute_site_amplification(C, ctx):
 
 def _get_site_type_dummy_variables(ctx):
     """
-    Get site type dummy variables, two site tyoe is considered
+    Get site type dummy variables, two site type is considered
     based on the shear wave velocity intervals in the uppermost 30 m, Vs30:
     Soil: Vs30 < 760 m/s
     Rock: Vs30 >= 760 m/s
@@ -118,6 +118,11 @@ class Ghasemi2009(GMPE):
             # Convert from common logarithm to natural logarithm
             sig[m] = np.log(10 ** C['sigma'])
 
+    """
+    The attenuation relation developed by Ghasemi et. al estimates only the 'SA'.
+    Here in this code, a line for intensity measure of 'PGA' is also considered 
+    with the same coefficients as SA(0.05 s), in case of need. 
+    """
     COEFFS = CoeffsTable(sa_damping=5, table="""
     IMT     a1       a2       a3       a4       a6       a7       sigma
     PGA     0.868    0.405   -1.424    0.014    0.859    0.836    0.319               
