@@ -17,7 +17,7 @@
 # along with OpenQuake. If not, see <http://www.gnu.org/licenses/>.
 
 """
-Module exports :class:'Ghasemi2009' 
+Module exports :class:'GhasemiEtAl2009' 
 """
 import numpy as np
 from scipy.constants import g
@@ -69,7 +69,7 @@ def _get_site_type_dummy_variables(ctx):
     sRock[idx] = 1.0
     return sSoil, sRock
 
-class Ghasemi2009(GMPE):
+class GhasemiEtAl2009(GMPE):
     """
     Implements the PGA GMPE of H.Ghasemi, M.Zare, Y,Fukushima, K.Koketsu
     (2009a) An empirical spectral ground-motion model for Iran, 
@@ -100,6 +100,12 @@ class Ghasemi2009(GMPE):
 
     #: Required distance measure is rupture distance
     REQUIRES_DISTANCES = {'rrup'}
+
+    #: Verification of mean value data was done by digitizing Figures 5 and 6
+    #: using https://plotdigitizer.com/app. The average, minimum, and maximum errors
+    #: were 1.3%, 0.01%, and 4.57%, respectively with an stdev of 0.99%, mainly due to 
+    #: digitizing humman error.
+    non_verified = True
 
     def compute(self, ctx: np.recarray, imts, mean, sig, tau, phi):
         """
