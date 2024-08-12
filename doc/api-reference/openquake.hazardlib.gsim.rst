@@ -431,6 +431,14 @@ campbell_bozorgnia_2003
     :undoc-members:
     :show-inheritance:
 
+campbell_bozorgnia_2003_world
+-------------------------------------------------------
+
+.. automodule:: openquake.hazardlib.campbell_bozorgnia_2003_world
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 campbell_bozorgnia_2008
 -------------------------------------------------------
 
@@ -1287,6 +1295,14 @@ yu_2013
 -------------------------------------------
 
 .. automodule:: openquake.hazardlib.gsim.yu_2013
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+zafarani_2018
+-------------------------------------------
+
+.. automodule:: openquake.hazardlib.gsim.zafarani_2018
     :members:
     :undoc-members:
     :show-inheritance:
