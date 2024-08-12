@@ -19,7 +19,6 @@
 """
 Module exports : class:`ZafaraniEtAl2018`
                  class:`ZafaraniEtAl2018VHratio`
-                 class:`ZafaraniEtAl2018Vertical`.
 """
 import numpy as np
 from scipy.constants import g
@@ -148,7 +147,6 @@ class ZafaraniEtAl2018(GMPE):
     #: Required distance measure is Rjb (eq. 1).
     REQUIRES_DISTANCES = {'rjb'}
 
-    sgn = 0
 
     def compute(self, ctx: np.recarray, imts, mean, sig, tau, phi):
         """
@@ -209,6 +207,27 @@ class ZafaraniEtAl2018VHratio(ZafaraniEtAl2018):
 
     DEFINED_FOR_INTENSITY_MEASURE_COMPONENT = const.IMC.VERTICAL_TO_HORIZONTAL_RATIO
 
+    def compute(self, ctx: np.recarray, imts, mean, sig, tau, phi):
+        """
+        See :meth:`superclass method
+        <.base.GroundShakingIntensityModel.compute>`
+        for spec of input and result values.
+        """
+        for m, imt in enumerate(imts):
+            C = self.COEFFS[imt]
+            imean = (_compute_magnitude(C, ctx) +
+                     _compute_distance(C, ctx) +
+                     _get_site_amplification(C, ctx) +
+                     _get_mechanism(C, ctx))
+
+
+            mean[m] = np.log(10.0 ** imean)
+
+            # Return stddevs in terms of natural log scaling
+            sig[m] = np.log(10.0 ** C['SigmaTot'])
+            tau[m] = np.log(10.0 ** C['SigmaB'])
+            phi[m] = np.log(10.0 ** C['SigmaW'])
+
     #: Coefficients for V/H from Table 2
 
     COEFFS = CoeffsTable(sa_damping=5, table="""
@@ -241,31 +260,3 @@ class ZafaraniEtAl2018VHratio(ZafaraniEtAl2018):
 
     """)
 
-
-class ZafaraniEtAl2018Vertical(GMPE):
-    """
-    Computing PGA and PSA based on the vertical component of record.
-    """
-
-    DEFINED_FOR_TECTONIC_REGION_TYPE = const.TRT.ACTIVE_SHALLOW_CRUST
-
-    DEFINED_FOR_INTENSITY_MEASURE_TYPES = {PGA, SA}
-
-    DEFINED_FOR_INTENSITY_MEASURE_COMPONENT = const.IMC.HORIZONTAL
-
-    DEFINED_FOR_STANDARD_DEVIATION_TYPES = {
-        const.StdDev.TOTAL, const.StdDev.INTER_EVENT, const.StdDev.INTRA_EVENT}
-
-    REQUIRES_SITES_PARAMETERS = {'vs30'}
-
-    REQUIRES_RUPTURE_PARAMETERS = {'rake', 'mag'}
-
-    REQUIRES_DISTANCES = {'rjb'}
-
-
-    def get_mean_and_stddevs(self, sites, rup, dists, imt, stddev_types):
-        meanH, stddevH            = ZafaraniEtAl2018().get_mean_and_stddevs(sites, rup, dists, imt, stddev_types) 
-        meanVHcoef , stddevHVcoef = ZafaraniEtAl2018VHratio().get_mean_and_stddevs(sites, rup, dists, imt, stddev_types)
-        mean = meanVHcoef + meanH
-        stddevs = stddevHVcoef
-        return mean, stddevs

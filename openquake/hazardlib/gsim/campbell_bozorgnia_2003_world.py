@@ -60,25 +60,25 @@ def _compute_distance_scaling(C, mag, rrup, vs30):
 def _get_site_type_dummy_variables(vs30):
         
         """
-        Get site type dummy variables, two site types are considered
+        Get site type dummy variables, four site types are considered
         based on the shear wave velocity intervals in the uppermost 30 m, Vs30:
-        firm soil: Vs30 <= 298
-        very firm soil: 298 < Vs30 <= 368 m/s
-        soft rock: 368 < Vs30 <= 421 m/s
-        firm rock: Vs30 > 421 m/s
+        firm soil: 298 < Vs30 <= 368 m/s
+        very firm soil: 368 < Vs30 <= 421 m/s
+        soft rock: 421 < Vs30 <= 830 m/s
+        firm rock: Vs30 > 830 m/s
         """
         svfs = np.zeros(len(vs30))
         ssr = np.zeros(len(vs30))
         sfr = np.zeros(len(vs30))
 
         # very firm soil
-        idx = (vs30 >= 298) & (vs30 <= 368)
+        idx = (vs30 >= 368) & (vs30 <= 421)
         svfs[idx] = 1.0
         # soft rock
-        idx = (vs30 > 368) & (vs30 <= 421)
+        idx = (vs30 > 421) & (vs30 <= 830)
         ssr[idx] = 1.0
         # firm rock
-        idx = (vs30 > 421)
+        idx = (vs30 > 830)
         sfr[idx] = 1.0
         return svfs, ssr ,sfr
 
@@ -97,7 +97,6 @@ def _compute_faulting_mechanism(C, rake, dip):
     # flag for thrust faulting
     fth = (dip <= 45) & (22.5 <= rake) & (rake <= 157.5)
     return C['c10'] * frv + C['c11'] * fth
-
 
 def _compute_far_source_soil_effect(C, vs30):
     """
@@ -127,7 +126,7 @@ def _compute_hanging_wall_effect(C, rjb, rrup, dip, mag, rake, vs30):
     idx1 = rjb < 5
     svfs = ((svfs*((5 - rjb) / 5))*idx1 + 0.0)*(dip <= 70)
     ssr  = ((ssr*((5 - rjb) / 5))*idx1 + 0.0)*(dip <= 70)
-    sfr  = ((sfr*((5 - rjb) / 5))*idx1 + 0.0)*((dip <= 70))
+    sfr  = ((sfr*((5 - rjb) / 5))*idx1 + 0.0)*(dip <= 70)
     hw = svfs+ssr+sfr
 
     # eq. 9
