@@ -126,6 +126,14 @@ allen_2022
     :undoc-members:
     :show-inheritance:
 
+ambraseys_2005_forMetro
+------------------------------------------
+
+.. automodule:: openquake.hazardlib.ambraseys_2005_forMetro
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 ameri_2017
 ---------------------------------------------------
 
